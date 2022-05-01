@@ -16,10 +16,11 @@ MAKE_COMPOSER ?= ${MAKE_PHP} ${MAKE_COMPOSER_2_BIN}
 check: lint test
 
 .PHONY: lint
-lint: vendor tools
+lint: vendor tools vendor/bin/composer-normalize
 	tools/prettier/node_modules/.bin/prettier --ignore-path .gitignore -c . '!**/*.svg'
 	${MAKE_COMPOSER} validate --strict
 	${MAKE_PHP} tools/phpstan/vendor/bin/phpstan analyse
+	set -e; for file in composer.json tools/*/composer.json; do ${MAKE_PHP} vendor/bin/composer-normalize $$file --dry-run --diff --indent-size=2 --indent-style=space; done
 	${MAKE_PHP} tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff
 
 .PHONY: test
@@ -30,6 +31,10 @@ test: vendor vendor/bin/phpunit
 fix: tools
 	tools/prettier/node_modules/.bin/prettier --ignore-path .gitignore -w . '!**/*.svg'
 	${MAKE_PHP} tools/php-cs-fixer/vendor/bin/php-cs-fixer fix
+
+.PHONY: composer-normalize
+composer-normalize: vendor/bin/composer-normalize
+	set -e; for file in composer.json tools/*/composer.json; do ${MAKE_PHP} vendor/bin/composer-normalize $$file --indent-size=2 --indent-style=space; done
 
 .PHONY: clean
 clean:
@@ -49,7 +54,7 @@ tools: tools/prettier/node_modules/.bin/prettier tools/phpstan/vendor/bin/phpsta
 tools/prettier/node_modules/.bin/prettier:
 	npm --prefix=tools/prettier update
 
-vendor vendor/bin/phpunit:
+vendor vendor/bin/phpunit vendor/bin/composer-normalize:
 	${MAKE_COMPOSER} update
 
 tools/phpstan/vendor/bin/phpstan:

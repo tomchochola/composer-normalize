@@ -1,11 +1,11 @@
 {
-  "name": "tomchochola/composer-library",
-  "description": "Composer library",
+  "name": "tomchochola/composer-normalize",
+  "description": "ergebnis/composer-normalize installer",
   "license": "proprietary",
-  "type": "library",
+  "type": "composer-plugin",
   "keywords": [
     "tomchochola",
-    "composer-library"
+    "composer-normalize"
   ],
   "authors": [
     {
@@ -14,7 +14,8 @@
     }
   ],
   "require": {
-    "php": "^8.1"
+    "php": "^8.1",
+    "composer-plugin-api": "^2.0"
   },
   "require-dev": {
     "composer/composer": "^2.0",
@@ -24,15 +25,26 @@
   "prefer-stable": true,
   "autoload": {
     "psr-4": {
-      "Tomchochola\\ComposerLibrary\\": "src/"
+      "Tomchochola\\ComposerNormalize\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Tomchochola\\ComposerLibrary\\Tests\\": "tests/"
+      "Tomchochola\\ComposerNormalize\\Tests\\": "tests/"
     }
   },
   "config": {
     "sort-packages": true
+  },
+  "extra": {
+    "class": "Tomchochola\\ComposerNormalize\\ComposerNormalizeInstaller"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "Tomchochola\\ComposerNormalize\\ComposerNormalizeInstaller::install"
+    ],
+    "post-update-cmd": [
+      "Tomchochola\\ComposerNormalize\\ComposerNormalizeInstaller::update"
+    ]
   }
 }
