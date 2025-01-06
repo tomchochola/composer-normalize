@@ -1,7 +1,7 @@
 {
   "name": "tomchochola/composer-normalize",
   "description": "ergebnis/composer-normalize installer",
-  "license": "proprietary",
+  "license": "CC-BY-ND-4.0",
   "type": "composer-plugin",
   "keywords": [
     "tomchochola",
